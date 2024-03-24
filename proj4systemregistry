@@ -157,7 +157,7 @@ def main():
                 print("1. Enroll in a Course")
                 print("2. Print My Schedule")
                 print("3. Unenroll Course")
-        elif choice == "3":                         # Allows user to exit menu and end
+        elif choice == "3":                         # Allows user to exit menu and end code
           print("bye!")
           exit()
 
