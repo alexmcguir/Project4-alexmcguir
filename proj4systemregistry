@@ -1,0 +1,166 @@
+class Course:
+    def __init__(self, name, max_size):
+        self.name = name            #Name of course
+        self.max_size = max_size   # Size limits
+        self.roster = []  # List to store enrolled students
+#Enrolls Students into specified classes
+    def enroll(self, student_name):
+        if len(self.roster) < self.max_size:
+            self.roster.append(student_name)
+            print(f"{student_name} successfully enrolled in {self.name}")
+        else:
+            print(f"Error: {self.name} is full")
+#Unenrolls students from specified class
+    def unenroll(self, student_name):
+        if student_name in self.roster:
+            self.roster.remove(student_name)
+            print(f"{student_name} successfully unenrolled from {self.name}")
+        else:
+            print(f"Error: {student_name} is not enrolled in {self.name}")
+#Prints roster for courses
+    def print_roster(self):
+        print(f"Students enrolled in {self.name}:")
+        for student in self.roster:
+            print(student)
+
+#The Class Registration System
+class RegistrationSystem:
+    def __init__(self):
+        self.courses = {}  # Dictionary to store courses (key: course name, value: Course object)
+#Creates course
+    def create_course(self, name, max_size):
+        if name not in self.courses:
+            self.courses[name] = Course(name, max_size)
+            print(f"Course {name} created successfully")
+        else:
+            print(f"Error: Course {name} already exists")
+#Updates course name and size
+    def update_course(self, name, new_name, new_max_size):
+        if name in self.courses:
+            course = self.courses[name]
+            course.name = new_name
+            course.max_size = new_max_size
+            self.courses[new_name] = course
+            del self.courses[name]
+            print(f"Course {name} updated successfully")
+        else:
+            print(f"Error: Course {name} not found")
+#Deletes course
+    def delete_course(self, name):
+        if name in self.courses:
+            del self.courses[name]
+            print(f"Course {name} deleted successfully")
+        else:
+            print(f"Error: Course {name} not found")
+#Prints course roster by asking for course name
+    def print_course_roster(self, course_name):
+        if course_name in self.courses:
+            self.courses[course_name].print_roster()
+        else:
+            print(f"Error: Course {course_name} not found")
+#Enrolls specific student when they enter their name and course name
+    def student_enroll(self, student_name, course_name):
+        if course_name in self.courses:
+            course = self.courses[course_name]
+            if len(course.roster) == course.max_size:
+                print(f"Class is full at {course.max_size}")
+            else:
+                course.enroll(student_name)
+
+        else:
+            print(f"Error: Course {course_name} not found")
+#Prints schedule for specified student
+    def student_print_schedule(self, student_name):
+        enrolled_courses = []
+        for course in self.courses.values():
+            if student_name in course.roster:
+                enrolled_courses.append(course.name)
+        if enrolled_courses:
+            print(f"{student_name}'s schedule:")
+            for course in enrolled_courses:
+                print(course)
+        else:
+            print(f"{student_name} is not enrolled in any courses")
+
+    def student_unenroll(self, student_name, course_name):
+        if course_name in self.courses:
+            self.courses[course_name].unenroll(student_name)
+        else:
+            print(f"Error: Course {course_name} not found")
+
+#Working Code
+def main():
+    registration_system = RegistrationSystem()
+
+    print("Welcome to the Registration System!\n")   #Welcome message for registration system menu
+
+    while True:
+        print("\nRegistration System")
+        print("1. Administrator Mode")
+        print("2. Student Mode")
+        print("3. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            # Administrator Mode Menu
+            print("\nAdministrator Mode")
+            print("1. Create Course")
+            print("2. Update Course")
+            print("3. Delete Course")
+            print("4. Print Course Roster")
+
+            administrator_choice = input ("Enter your choice: ")   #Allows administrator to create a course and size for that course
+            if administrator_choice == "1":
+                new_course = input("Enter course name: ")
+                max_size = int(input("Enter max size (integer): "))
+                registration_system.create_course(new_course, max_size)
+            if administrator_choice == "2":                         # Allows administrator to update course by asking for old course name, new course name, and new course size
+                name = input("Enter old course name: ")
+                new_name = input("Enter new course name: ")
+                new_max_size = int(input("Enter new max size: "))
+                registration_system.update_course(name, new_name, new_max_size)
+            if administrator_choice == "3":                         # Allows administrators to delete certain courses
+                name = input("Enter course name: ")
+                registration_system.delete_course(name)
+            if administrator_choice == "4":                         # Allows adminstrators to print class course roster
+                name = input("Enter course name: ")
+                registration_system.print_course_roster(name)
+            while administrator_choice not in ("1", "2", "3", "4"):
+                print("\nAdministrator Menu")
+                print("1. Create Course")
+                print("2. Update Course")
+                print("3. Delete Course")
+                print("4. Print Course Roster")
+
+        elif choice == "2":
+            # Student Mode Menu
+            print("\nStudent Mode")
+            print("1. Enroll in a Course")
+            print("2. Print My Schedule")
+            print("3. Unenroll Course")
+
+            student_choice = input("Enter your choice: ")           # Allows student to enroll in a specificed course by inputting their name and course name
+            if student_choice == "1":
+                student_name = input("Enter student name: ")
+                course_name = input ("Enter course name: ")
+                registration_system.student_enroll(student_name, course_name)
+            if student_choice == "2":                               # Allows student to print their schedule
+                student_name = input("Enter student name: ")
+                registration_system.student_print_schedule(student_name)
+            if student_choice == "3":                               # Allows student to unenroll from any course their in
+                student_name = input("Enter student name: ")
+                course_name = input("Enter course name: ")
+                registration_system.student_unenroll(student_name, course_name)
+            while student_choice not in ("1", "2", "3"):
+                print("\nStudent Menu")
+                print("1. Enroll in a Course")
+                print("2. Print My Schedule")
+                print("3. Unenroll Course")
+        elif choice == "3":                         # Allows user to exit menu and end
+          print("bye!")
+          exit()
+
+
+if __name__ == "__main__":
+    main()
